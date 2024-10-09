@@ -1,0 +1,20 @@
+# docker build -t realtime-data-generator-backend-base:v1.0.0 -f Dockerfile_base .
+
+FROM openjdk:17-jdk-slim
+
+LABEL maintainer="songchao <90853@fudian-bank.com>"
+
+# 安装Maven
+RUN apt-get update && apt-get install -y maven
+
+# 设置工作目录
+WORKDIR /app
+
+# 复制Maven配置文件
+COPY pom.xml .
+
+# 复制DB2驱动到项目的lib目录
+COPY libs/*.jar /app/lib/
+
+# 下载依赖（这一步会被缓存，除非pom.xml发生变化）
+RUN mvn dependency:go-offline -B

@@ -57,15 +57,15 @@ backend/RealTimeDataGenerator/build/
 /backend/RealTimeDataGenerator/.vscode/
 
 # Mac 系统文件
-.DS_Store
-.AppleDouble
-.LSOverride
+**/.DS_Store
+**/.AppleDouble
+**/.LSOverride
 
 # 图标必须以两个 \r 结尾
 Icon
 
 # 缩略图
-._*
+**/._*
 
 # 可能出现在卷根目录中的文件
 .DocumentRevisions-V100
@@ -82,3 +82,9 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# 其他常见的 Mac 临时文件
+**/*.swp
+**/*~
+**/._*
+**/.*.sw[a-p]
