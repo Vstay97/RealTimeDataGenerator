@@ -1,0 +1,14 @@
+# docker build -t realtime-data-generator-frontend-base:v1.0.0 -f Dockerfile_base .
+
+FROM node:14
+
+LABEL maintainer="songchao <90853@fudian-bank.com>"
+
+# 设置工作目录
+WORKDIR /app
+
+# 复制package.json和package-lock.json
+COPY package*.json ./
+
+# 安装依赖
+RUN npm install
