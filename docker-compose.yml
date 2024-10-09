@@ -1,0 +1,19 @@
+version: '3'
+services:
+  backend:
+    # build: ./backend/RealTimeDataGenerator
+    image: realtime-data-generator-backend:v1.0.0
+    ports:
+      - "18081:18081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    network_mode: host
+
+  frontend:
+    # build: ./frontend/realtime-data-generator-front
+    image: realtime-data-generator-frontend:v1.0.0
+    ports:
+      - "13001:13001"
+    depends_on:
+      - backend
+    network_mode: host
