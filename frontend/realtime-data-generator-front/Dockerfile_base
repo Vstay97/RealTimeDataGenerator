@@ -1,14 +1,17 @@
 # docker build -t realtime-data-generator-frontend-base:v1.0.0 -f Dockerfile_base .
 
-FROM node:14
+FROM node:19
 
 LABEL maintainer="songchao <90853@fudian-bank.com>"
 
 # 设置工作目录
 WORKDIR /app
 
+# 设置npm源
+RUN npm config set registry https://registry.npm.taobao.org
+
 # 复制package.json和package-lock.json
 COPY package*.json ./
 
-# 安装依赖
-RUN npm install
+# 安装依赖(避免依赖冲突)
+RUN npm install --legacy-peer-deps
