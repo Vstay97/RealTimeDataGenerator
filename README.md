@@ -181,7 +181,7 @@ http://localhost:18081/swagger-ui.html
 
 ## 许可证
 
-本项目遵循 [GNU AGPL 3.0](https://www.gnu.org/licenses/agpl-3.0.en.html) 开源协议。
+本项目遵循 [AGPL-3.0](https://www.gnu.org/licenses/agpl-3.0.en.html) 开源协议。
 
 ## 联系方式
 
