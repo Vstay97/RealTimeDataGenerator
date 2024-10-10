@@ -13,8 +13,19 @@ WORKDIR /app
 # 复制Maven配置文件
 COPY pom.xml .
 
-# 复制DB2驱动到项目的lib目录
-COPY libs/*.jar /app/lib/
+# 复制源代码
+COPY src ./src
 
-# 下载依赖（这一步会被缓存，除非pom.xml发生变化）
-RUN mvn dependency:go-offline -B
+# 复制本地依赖
+COPY libs ./libs
+
+# 安装本地依赖到Maven本地仓库
+RUN for file in libs/*.jar; do \
+    mvn install:install-file -Dfile=$file -DgroupId=local -DartifactId=$(basename $file .jar) -Dversion=1.0 -Dpackaging=jar; \
+    done
+
+# 下载依赖并构建应用
+RUN mvn clean package -DskipTests
+
+# 清理源代码（保留构建结果和依赖）
+RUN rm -rf src

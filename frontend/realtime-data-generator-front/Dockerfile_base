@@ -8,10 +8,19 @@ LABEL maintainer="songchao <90853@fudian-bank.com>"
 WORKDIR /app
 
 # 设置npm源
-RUN npm config set registry https://registry.npm.taobao.org
+RUN npm config set registry https://registry.npmmirror.com/
 
 # 复制package.json和package-lock.json
 COPY package*.json ./
 
 # 安装依赖(避免依赖冲突)
 RUN npm install --legacy-peer-deps
+
+# 预先安装serve
+RUN npm install -g serve
+
+# 复制源代码
+COPY . .
+
+# 构建应用
+RUN npm run build

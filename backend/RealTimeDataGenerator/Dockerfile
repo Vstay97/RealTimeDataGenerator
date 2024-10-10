@@ -5,8 +5,11 @@ FROM realtime-data-generator-backend-base:v1.0.0
 # 复制源代码
 COPY src ./src
 
-# 构建应用
-RUN mvn clean package -DskipTests -Dmaven.repo.local=/app/.m2/repository
+# 复制本地依赖（以防有新的依赖添加）
+COPY libs ./libs
+
+# 构建应用（使用已下载的依赖）
+RUN mvn clean package -DskipTests -o
 
 # 暴露应用端口
 EXPOSE 18081
