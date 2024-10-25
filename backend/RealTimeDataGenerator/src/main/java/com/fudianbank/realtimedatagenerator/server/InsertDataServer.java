@@ -4,6 +4,7 @@ import com.fudianbank.realtimedatagenerator.config.DatabaseConnectionConfig;
 import com.fudianbank.realtimedatagenerator.server.DatabaseInserter;
 import com.fudianbank.realtimedatagenerator.server.impl.GenericDatabaseInserterImpl;
 import com.fudianbank.realtimedatagenerator.utils.DatabaseFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @Date 2024-09-30 14:35
  * Belongs to Fudian Bank
  */
+@Slf4j
 @Component
 public class InsertDataServer {
 
@@ -54,7 +56,7 @@ public class InsertDataServer {
             Thread thread = new Thread(inserter);
             threads.put(key, thread);
             thread.start();
-            System.out.println("Started insertion for " + key);
+            log.info("Started insertion thread {} for database: {} with type: {}", i, databaseName, dbType);
         }
         
         runningTasks.put(dbKey, new TaskInfo(dbKey, dbType, threadCount));
@@ -70,9 +72,9 @@ public class InsertDataServer {
                 maxSid = rs.getInt(1);
             }
         } catch (Exception e) {
-            System.err.println("Error getting max SID from database: " + e.getMessage());
+            log.error("Error getting max SID from database: {}", e.getMessage(), e);
         }
-        System.out.println("Max SID from database: " + maxSid);
+        log.info("Max SID from database: {}", maxSid);
         return maxSid;
     }
 
@@ -92,7 +94,7 @@ public class InsertDataServer {
                     Thread.currentThread().interrupt();
                 }
             }
-            System.out.println("Stopped insertion for " + key);
+            log.info("Stopped insertion for {}", key);
         }
         sidCounters.remove(dbType + "-" + databaseName);
         String taskKey = dbType + "-" + databaseName;

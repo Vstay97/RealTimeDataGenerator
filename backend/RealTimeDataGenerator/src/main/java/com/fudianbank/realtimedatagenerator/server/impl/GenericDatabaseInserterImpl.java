@@ -47,6 +47,7 @@ public class GenericDatabaseInserterImpl implements DatabaseInserter {
 
     @Override
     public void run() {
+        log.info("Database inserter thread started for database: {} with type: {}", config.getDatabaseName(), config.getDbType());
         try {
             createTableIfNotExists();
         } catch (SQLException e) {
@@ -148,9 +149,10 @@ public class GenericDatabaseInserterImpl implements DatabaseInserter {
 
             try (Statement stmt = conn.createStatement()) {
                 stmt.execute(sql);
-                System.out.println("Table RT_TEST_STUDENT created or already exists in " + databaseName);
+                log.info("Table RT_TEST_STUDENT created or verified in database: {}", databaseName);
             }
         } catch (Exception e) {
+            log.error("Failed to create table in database: {}, error: {}", databaseName, e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
@@ -170,9 +172,9 @@ public class GenericDatabaseInserterImpl implements DatabaseInserter {
 
             int rowsAffected = preparedStatement.executeUpdate();
             if (rowsAffected > 0) {
-                System.out.println("Insertion successful into " + databaseName + ", SID: " + studentDO.getSid());
+                log.info("Successfully inserted data: SID={}, Name={} into database: {}", studentDO.getSid(), studentDO.getSname(), config.getDatabaseName());
             } else {
-                System.out.println("Insertion failed into " + databaseName);
+                log.warn("Failed to insert data into {}, SID: {}", databaseName, studentDO.getSid());
             }
         }
     }
@@ -196,5 +198,11 @@ public class GenericDatabaseInserterImpl implements DatabaseInserter {
         }
         log.info("Max SID from database: {}", maxSid);
         return maxSid;
+    }
+
+    @Override
+    public void stopInsertion() {
+        running.set(false);
+        log.info("Database inserter thread stopped for database: {} with type: {}", config.getDatabaseName(), config.getDbType());
     }
 }
