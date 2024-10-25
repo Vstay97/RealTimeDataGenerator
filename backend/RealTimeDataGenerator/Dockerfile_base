@@ -14,6 +14,22 @@ RUN apt-get update && apt-get install -y maven
 # 设置工作目录
 WORKDIR /app
 
+# 创建Maven配置文件
+RUN mkdir -p /root/.m2 && \
+    echo '<?xml version="1.0" encoding="UTF-8"?>\
+    <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"\
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\
+    xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">\
+    <mirrors>\
+    <mirror>\
+    <id>aliyunmaven</id>\
+    <mirrorOf>*</mirrorOf>\
+    <name>阿里云公共仓库</name>\
+    <url>https://maven.aliyun.com/repository/public</url>\
+    </mirror>\
+    </mirrors>\
+    </settings>' > /root/.m2/settings.xml
+
 # 复制Maven配置文件
 COPY pom.xml .
 
