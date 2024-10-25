@@ -1,4 +1,4 @@
-import 'antd/dist/reset.css';  // 添加这行
+import 'antd/dist/reset.css';
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
 import { Layout, Menu, Form, Input, Button, Select, InputNumber, Table, Space, message, Typography } from 'antd';
