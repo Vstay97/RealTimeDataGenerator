@@ -27,11 +27,18 @@ public class InsertDataServer {
     private final ConcurrentHashMap<String, Thread> threads = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, AtomicInteger> sidCounters = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, TaskInfo> runningTasks = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, AtomicInteger> databaseCounters = new ConcurrentHashMap<>();
 
     @Autowired
     private DatabaseFactory databaseFactory;
 
     public void startInsertion(String dbType, String databaseName, int threadCount, String jdbcUrl, String username, String password) {
+        String dbKey = dbType + "-" + databaseName;
+        // 为每个数据库创建一个共享计数器
+        AtomicInteger counter = databaseCounters.computeIfAbsent(dbKey, k -> 
+            new AtomicInteger(getMaxSidFromDatabase(dbType, jdbcUrl, username, password))
+        );
+        
         for (int i = 0; i < threadCount; i++) {
             String key = getKey(dbType, databaseName, i);
             DatabaseConnectionConfig config = new DatabaseConnectionConfig();
@@ -40,6 +47,8 @@ public class InsertDataServer {
             config.setJdbcUrl(jdbcUrl);
             config.setUsername(username);
             config.setPassword(password);
+            config.setSharedCounter(counter); // 传递共享计数器
+            
             DatabaseInserter inserter = new GenericDatabaseInserterImpl(databaseFactory, config);
             inserters.put(key, inserter);
             Thread thread = new Thread(inserter);
@@ -47,8 +56,8 @@ public class InsertDataServer {
             thread.start();
             System.out.println("Started insertion for " + key);
         }
-        String taskKey = dbType + "-" + databaseName;
-        runningTasks.put(taskKey, new TaskInfo(taskKey, dbType, threadCount));
+        
+        runningTasks.put(dbKey, new TaskInfo(dbKey, dbType, threadCount));
     }
 
     private int getMaxSidFromDatabase(String dbType, String jdbcUrl, String username, String password) {
@@ -88,6 +97,8 @@ public class InsertDataServer {
         sidCounters.remove(dbType + "-" + databaseName);
         String taskKey = dbType + "-" + databaseName;
         runningTasks.remove(taskKey);
+        // 清理计数器
+        databaseCounters.remove(dbType + "-" + databaseName);
     }
 
     public List<TaskInfo> getRunningTasks() {

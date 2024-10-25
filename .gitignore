@@ -42,6 +42,7 @@
 /backend/RealTimeDataGenerator/*.iws
 /backend/RealTimeDataGenerator/*.iml
 /backend/RealTimeDataGenerator/*.ipr
+**/.idea
 
 # NetBeans
 /backend/RealTimeDataGenerator/nbproject/private/

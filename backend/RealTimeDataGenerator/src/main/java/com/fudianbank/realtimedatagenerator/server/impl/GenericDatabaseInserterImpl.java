@@ -42,7 +42,7 @@ public class GenericDatabaseInserterImpl implements DatabaseInserter {
         this.jdbcUrl = config.getJdbcUrl();
         this.username = config.getUsername();
         this.password = config.getPassword();
-        this.sidCounter = new AtomicInteger(getMaxSidFromDatabase());
+        this.sidCounter = config.getSharedCounter(); // 使用共享计数器
     }
 
     @Override
