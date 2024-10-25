@@ -12,6 +12,9 @@ services:
   frontend:
     # build: ./frontend/realtime-data-generator-front
     image: realtime-data-generator-frontend:v1.0.0
+    environment:
+      - NODE_ENV=production
+      - PUBLIC_URL=/
     ports:
       - "13001:13001"
     depends_on:

@@ -40,7 +40,10 @@ fi
 
 # 前端构建
 echo "开始构建前端应用镜像..."
-if docker build -t $FRONTEND_IMAGE ./frontend/realtime-data-generator-front; then
+if docker build \
+  --build-arg NODE_ENV=production \
+  --build-arg PUBLIC_URL=/ \
+  -t $FRONTEND_IMAGE ./frontend/realtime-data-generator-front; then
     echo "前端应用镜像构建成功: $FRONTEND_IMAGE"
 else
     echo "前端应用镜像构建失败!"

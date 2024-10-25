@@ -16,6 +16,9 @@ COPY package*.json ./
 # 安装依赖(避免依赖冲突)
 RUN npm install --legacy-peer-deps
 
+# 在 npm install 之后，添加以下命令
+RUN npm install --save @ant-design/icons @ant-design/cssinjs antd
+
 # 预先安装serve
 RUN npm install -g serve
 
