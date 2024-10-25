@@ -4,6 +4,10 @@ FROM openjdk:17-jdk-slim
 
 LABEL maintainer="songchao <90853@fudian-bank.com>"
 
+# 更换apt源为北外源
+RUN sed -i 's/deb.debian.org/mirrors.bfsu.edu.cn/g' /etc/apt/sources.list && \
+    sed -i 's/security.debian.org/mirrors.bfsu.edu.cn/g' /etc/apt/sources.list
+
 # 安装Maven
 RUN apt-get update && apt-get install -y maven
 
