@@ -7,6 +7,11 @@ set -e
 BACKEND_IMAGE="realtime-data-generator-backend:v1.0.0"
 FRONTEND_IMAGE="realtime-data-generator-frontend:v1.0.0"
 
+# 删除旧的运行时镜像
+echo "删除旧的运行时镜像..."
+docker rmi $BACKEND_IMAGE || true
+docker rmi $FRONTEND_IMAGE || true
+
 # 加载基础镜像
 echo "加载后端基础镜像..."
 if docker load < backend-base.tar; then
