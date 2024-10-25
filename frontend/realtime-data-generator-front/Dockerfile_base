@@ -13,14 +13,9 @@ RUN npm config set registry https://registry.npmmirror.com/
 # 复制package.json和package-lock.json
 COPY package*.json ./
 
-# 安装依赖(避免依赖冲突)
-RUN npm install --legacy-peer-deps
-
-# 在 npm install 之后，添加以下命令
-RUN npm install --save @ant-design/icons @ant-design/cssinjs antd
-
-# 预先安装serve
-RUN npm install -g serve
+# 合并安装命令并使用 --legacy-peer-deps
+RUN npm install --legacy-peer-deps && \
+    npm install -g serve
 
 # 复制源代码
 COPY . .
